@@ -1,0 +1,48 @@
+{
+  "name": "react-suber",
+  "version": "0.1.0",
+  "description": "Binding function 'withBus' between React and Suber",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "npm run lint && babel src -d lib --ignore \"**/*.test.js\" ",
+    "lint": "standard --fix",
+    "test": "npm run lint && jest",
+    "dev": "jest --watch",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oskarhane/react-suber.git"
+  },
+  "author": {
+    "name": "Oskar Hane",
+    "email": "npm@oskarhane.com"
+  },
+  "homepage": "http://oskarhane.com",
+  "keywords": [
+    "pubsub",
+    "channels",
+    "event bus",
+    "message bus",
+    "react",
+    "suber"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-jest": "^18.0.0",
+    "babel-plugin-transform-react-jsx": "^6.22.0",
+    "babel-preset-es2015": "^6.18.0",
+    "enzyme": "^2.7.1",
+    "jest-cli": "^18.1.0",
+    "react": "^15.4.2",
+    "react-addons-test-utils": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "standard": "^8.6.0",
+    "suber":"^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "15.x",
+    "suber": "2.x"
+  }
+}
