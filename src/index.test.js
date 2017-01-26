@@ -15,7 +15,7 @@ test('passes the bus prop to a functional component', () => {
     makeSureCalled()
     expect(props.bus.take).toBeDefined()
     expect(props.orig).toEqual('myProp')
-    return React.createElement('div', null, 'Yo')
+    return <div>Yo</div>
   }
 
   // When
