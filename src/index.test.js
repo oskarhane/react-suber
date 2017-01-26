@@ -104,3 +104,57 @@ test('passes the bus prop to a regular component with children', () => {
   expect(makeSureCalled).toHaveBeenCalled()
   expect(component.text()).toEqual('Hello, Molly')
 })
+
+test('communication works', () => {
+  // Given
+  class WarningBanner extends React.Component {
+    constructor () {
+      super()
+      this.state = {
+        warning: null
+      }
+    }
+    componentDidMount () {
+      // Start listening for events on component mount
+      // When something arrives, set component state to the warning message
+      this.stop = this.props.bus.take('SHOW_WARNING', (msg) => {
+        this.setState({ warning: msg.warning })
+      })
+    }
+    componentWillUnmount () {
+      // Stop listening on unmount
+      this.stop()
+    }
+    render () {
+      // Show the warning (if present)
+      if (!this.state.warning) return <div className='no-warning' />
+      return <blink>{ this.state.warning }</blink>
+    }
+  }
+  const SenderButton = ({ bus, children }) => {
+    const onClick = () => bus.send('SHOW_WARNING', { warning: 'Hacking detected!' })
+    return <button onClick={onClick}>{ children }</button>
+  }
+
+  // When
+  const WarningBannerWithBus = withBus(WarningBanner)
+  const SenderButtonWithBus = withBus(SenderButton)
+  const wrapper = mount(
+    <div>
+      <WarningBannerWithBus />
+      <SenderButtonWithBus>Click</SenderButtonWithBus>
+    </div>
+  )
+
+  // Then
+  expect(wrapper.find('.no-warning').length).toBe(1)
+  expect(wrapper.find('blink').length).toBe(0)
+
+  // When
+  wrapper.find('button').simulate('click')
+
+  // Then
+  expect(wrapper.find('.no-warning').length).toBe(0)
+  expect(wrapper.find('blink').length).toBe(1)
+  expect(wrapper.find('blink').text()).toBe('Hacking detected!')
+})
