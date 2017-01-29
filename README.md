@@ -11,6 +11,8 @@
   </a>
 </p>
 
+Binding function `withBus` between [React](https://github.com/facebook/react) and [Suber](https://github.com/oskarhane/suber).
+
 ## Usage
 
 Install:
