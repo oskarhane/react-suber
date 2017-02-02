@@ -1,38 +1,37 @@
 <p align="center">
   <br>
-  <b>react-suber</b>
+  <b>preact-suber</b>
   <br>
   <br>
-  <a href="https://www.npmjs.com/package/react-suber">
-    <img src="https://img.shields.io/npm/v/react-suber.svg?style=flat" alt="npm">
+  <a href="https://www.npmjs.com/package/preact-suber">
+    <img src="https://img.shields.io/npm/v/preact-suber.svg?style=flat" alt="npm">
   </a>
   <a href="https://travis-ci.org/oskarhane/react-suber">
-    <img src="https://travis-ci.org/oskarhane/react-suber.svg?branch=master" alt="travis">
+    <img src="https://travis-ci.org/oskarhane/react-suber.svg?branch=preact" alt="travis">
   </a>
 </p>
 
-Binding function `withBus` between [React](https://github.com/facebook/react) and [Suber](https://github.com/oskarhane/suber).
+Binding function `withBus` between [Preact](https://github.com/developit/preact/) and [Suber](https://github.com/oskarhane/suber).
 
 ## Usage
 
 Install:
 
 ```bash
-yarn add react-suber
+yarn add preact-suber
 # or
-npm install react-suber --save
+npm install preact-suber --save
 ```
 
 Usage:
 
 ```javascript
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { withBus } from 'react-suber'
+import preact from 'preact'
+import { withBus } from 'preact-suber'
 
 // Create a component that will listen on the 'SHOW_WARNING' channel
 // It expects 'bus' as a prop
-class WarningBanner extends React.Component {
+class WarningBanner extends preact.Component {
   constructor () {
     super()
     this.state = {
@@ -71,7 +70,7 @@ const SenderButtonWithBus = withBus(SenderButton)
 
 // We use these wrapped components just as we
 // would with the original components
-ReactDOM.render(
+preact.render(
   <div>
     <WarningBannerWithBus />
     <SenderButtonWithBus>Click me!!!</SenderButtonWithBus>
@@ -89,7 +88,7 @@ ReactDOM.render(
 Returns the wrapped component with the `bus` prop injected.
 
 #### Arguments
-- `component: Component` React component. Can be PureComponent or regular Component
+- `component: Component` Preact component. Can be PureComponent or regular Component
 
 #### Returns a new React Component
 

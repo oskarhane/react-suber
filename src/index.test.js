@@ -1,6 +1,6 @@
 /* global test, expect, jest */
-import React from 'react'
-import { mount } from 'enzyme'
+import preact from 'preact'
+import { shallow, mount } from 'enzyme'
 import { withBus } from './'
 
 test('exposes the withBus wrapper function', () => {
@@ -59,7 +59,7 @@ test('passes the bus prop to a functional component with children', () => {
 test('passes the bus prop to a regular component', () => {
   // Given
   const makeSureCalled = jest.fn()
-  class MyComponent extends React.Component {
+  class MyComponent extends preact.Component {
     render () {
       makeSureCalled()
       expect(this.props.bus.take).toBeDefined()
@@ -81,13 +81,13 @@ test('passes the bus prop to a regular component', () => {
 test('passes the bus prop to a regular component with children', () => {
   // Given
   const makeSureCalled = jest.fn()
-  class MyInnerComponent extends React.Component {
+  class MyInnerComponent extends preact.Component {
     render () {
       makeSureCalled()
       return <span>Hello, {this.props.children}</span>
     }
   }
-  class MyComponent extends React.Component {
+  class MyComponent extends preact.Component {
     render () {
       expect(this.props.bus.take).toBeDefined()
       expect(this.props.orig).toEqual('myProp')
@@ -107,7 +107,7 @@ test('passes the bus prop to a regular component with children', () => {
 
 test('communication works', () => {
   // Given
-  class WarningBanner extends React.Component {
+  class WarningBanner extends preact.Component {
     constructor () {
       super()
       this.state = {
