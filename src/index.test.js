@@ -1,6 +1,6 @@
 /* global test, expect, jest */
 import React from 'react'
-import { shallow, mount } from 'enzyme'
+import { mount } from 'enzyme'
 import { withBus } from './'
 
 test('exposes the withBus wrapper function', () => {
@@ -19,12 +19,12 @@ test('passes the bus prop to a functional component', () => {
   }
 
   // When
-  const busComponent = withBus(fnComponent)({orig: 'myProp'})
-  const component = shallow(busComponent)
+  const BusComponent = withBus(fnComponent)
+  const component = mount(<BusComponent orig='myProp' />)
 
   // Then
   // See more assertion in component
-  expect(busComponent).toBeDefined()
+  expect(BusComponent).toBeDefined()
   expect(makeSureCalled).toHaveBeenCalled()
   expect(component.text()).toEqual('Yo')
 })
@@ -33,25 +33,25 @@ test('passes the bus prop to a functional component with children', () => {
   // Given
   const makeSureCalled = jest.fn()
 
-  const fnChildrenComponent = () => {
+  const FnChildrenComponent = () => {
     makeSureCalled()
-    return React.createElement('span', { key: 1 }, 'Hello')
+    return <span key='1'>Hello</span>
   }
 
   const fnComponent = (props) => {
     makeSureCalled()
     expect(props.bus.take).toBeDefined()
     expect(props.orig).toEqual('myProp')
-    return React.createElement('div', null, props.children)
+    return <div>{props.children}</div>
   }
 
   // When
-  const busComponent = withBus(fnComponent)({ orig: 'myProp', children: [fnChildrenComponent()] })
-  const component = shallow(busComponent)
+  const BusComponent = withBus(fnComponent)
+  const component = mount(<BusComponent orig='myProp'><FnChildrenComponent /></BusComponent>)
 
   // Then
   // See more assertion in component
-  expect(busComponent).toBeDefined()
+  expect(BusComponent).toBeDefined()
   expect(makeSureCalled).toHaveBeenCalledTimes(2)
   expect(component.text()).toEqual('Hello')
 })
