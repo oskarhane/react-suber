@@ -27,7 +27,8 @@ Usage:
 
 ```javascript
 import preact from 'preact'
-import { withBus } from 'preact-suber'
+import { createBus } from 'suber'
+import { withBus, BusProvider } from 'preact-suber'
 
 // Create a component that will listen on the 'SHOW_WARNING' channel
 // It expects 'bus' as a prop
@@ -70,19 +71,31 @@ const SenderButtonWithBus = withBus(SenderButton)
 
 // We use these wrapped components just as we
 // would with the original components
+// Remember to wrap your app in BusProvider to make the bus available
+// for all components
+const bus = createBus()
 preact.render(
-  <div>
+  <BusProvider bus={bus}>
     <WarningBannerWithBus />
     <SenderButtonWithBus>Click me!!!</SenderButtonWithBus>
-  </div>
+  </BusProvider>
   , document.getElementById('app')
 )
 ```
 
 ## API
 
+### Components
+- [`BusProvider`](#BusProvider)
+
 ### Functions
 - [`withBus`](#withBus)
+
+### <a id="BusProvider"></a> `BusProvider`
+Provider component that makes the `bus` available for `withBus` through the context.
+
+#### Attributes
+- `bus: Object` A Suber bus. Import and invoke `createBus()` from Suber to create one.
 
 ### <a id="withBus"></a> `withBus(component)`
 Returns the wrapped component with the `bus` prop injected.
