@@ -2,7 +2,7 @@
 import render from 'preact-render-to-string'
 import { h, Component } from 'preact'
 /** @jsx h */
-import { getBus } from 'suber'
+import { createBus } from 'suber'
 import { withBus, BusProvider, BusNotFoundError } from './'
 
 test('exposes the withBus wrapper function', () => {
@@ -20,7 +20,7 @@ test('BusProvider passes the bus in context', () => {
     return <div>Yo</div>
   }
   // When
-  const component = render(<BusProvider bus={getBus()}><FnComponent orig='myProp' /></BusProvider>)
+  const component = render(<BusProvider bus={createBus()}><FnComponent orig='myProp' /></BusProvider>)
 
   // Then
   // See more assertion in component
@@ -52,7 +52,7 @@ test('withBus passes the bus prop to a functional component', () => {
 
   // When
   const BusComponent = withBus(fnComponent)
-  const component = render(<BusProvider bus={getBus()}><BusComponent orig='myProp' /></BusProvider>)
+  const component = render(<BusProvider bus={createBus()}><BusComponent orig='myProp' /></BusProvider>)
 
   // Then
   // See more assertion in component
@@ -80,7 +80,7 @@ test('withBus passes the bus prop to a functional component with children', () =
   // When
   const BusComponent = withBus(fnComponent)
   const component = render(
-    <BusProvider bus={getBus()}>
+    <BusProvider bus={createBus()}>
       <BusComponent orig='myProp'>
         <FnChildrenComponent />
       </BusComponent>
@@ -107,7 +107,7 @@ test('withBus passes the bus prop to a regular component', () => {
   }
   // When
   const BusComponent = withBus(MyComponent)
-  const component = render(<BusProvider bus={getBus()}><BusComponent orig='myProp' name='Stella' /></BusProvider>)
+  const component = render(<BusProvider bus={createBus()}><BusComponent orig='myProp' name='Stella' /></BusProvider>)
 
   // Then
   // See more assertion in component
@@ -134,7 +134,7 @@ test('withBus passes the bus prop to a regular component with children', () => {
   }
   // When
   const BusComponent = withBus(MyComponent)
-  const component = render(<BusProvider bus={getBus()}><BusComponent orig='myProp' name='Molly' /></BusProvider>)
+  const component = render(<BusProvider bus={createBus()}><BusComponent orig='myProp' name='Molly' /></BusProvider>)
 
   // Then
   // See more assertion in component
