@@ -2,14 +2,45 @@
 import render from 'preact-render-to-string'
 import { h, Component } from 'preact'
 /** @jsx h */
-import { withBus } from './'
+import { getBus } from 'suber'
+import { withBus, BusProvider, BusNotFoundError } from './'
 
 test('exposes the withBus wrapper function', () => {
   const wb = withBus()
   expect(wb).toBeDefined()
 })
 
-test('passes the bus prop to a functional component', () => {
+test('BusProvider passes the bus in context', () => {
+  // Given
+  const makeSureCalled = jest.fn()
+  const FnComponent = (props, context) => {
+    makeSureCalled()
+    expect(context.bus.take).toBeDefined()
+    expect(props.orig).toEqual('myProp')
+    return <div>Yo</div>
+  }
+  // When
+  const component = render(<BusProvider bus={getBus()}><FnComponent orig='myProp' /></BusProvider>)
+
+  // Then
+  // See more assertion in component
+  expect(makeSureCalled).toHaveBeenCalled()
+  expect(component).toMatchSnapshot()
+})
+
+test('withBus throws BusNotFoundError when bus isnt in context', () => {
+  // Given
+  const fnComponent = (props, context) => {
+    return <div>Yo</div>
+  }
+  // When
+  const BusComponent = withBus(fnComponent)
+
+  // Then
+  expect(() => render(<BusComponent orig='myProp' />)).toThrow(new BusNotFoundError())
+})
+
+test('withBus passes the bus prop to a functional component', () => {
   // Given
   const makeSureCalled = jest.fn()
   const fnComponent = (props) => {
@@ -21,7 +52,7 @@ test('passes the bus prop to a functional component', () => {
 
   // When
   const BusComponent = withBus(fnComponent)
-  const component = render(<BusComponent orig='myProp' />)
+  const component = render(<BusProvider bus={getBus()}><BusComponent orig='myProp' /></BusProvider>)
 
   // Then
   // See more assertion in component
@@ -30,7 +61,7 @@ test('passes the bus prop to a functional component', () => {
   expect(component).toMatchSnapshot()
 })
 
-test('passes the bus prop to a functional component with children', () => {
+test('withBus passes the bus prop to a functional component with children', () => {
   // Given
   const makeSureCalled = jest.fn()
 
@@ -48,7 +79,13 @@ test('passes the bus prop to a functional component with children', () => {
 
   // When
   const BusComponent = withBus(fnComponent)
-  const component = render(<BusComponent orig='myProp'><FnChildrenComponent /></BusComponent>)
+  const component = render(
+    <BusProvider bus={getBus()}>
+      <BusComponent orig='myProp'>
+        <FnChildrenComponent />
+      </BusComponent>
+    </BusProvider>
+  )
 
   // Then
   // See more assertion in component
@@ -57,7 +94,7 @@ test('passes the bus prop to a functional component with children', () => {
   expect(component).toMatchSnapshot()
 })
 
-test('passes the bus prop to a regular component', () => {
+test('withBus passes the bus prop to a regular component', () => {
   // Given
   const makeSureCalled = jest.fn()
   class MyComponent extends Component {
@@ -70,7 +107,7 @@ test('passes the bus prop to a regular component', () => {
   }
   // When
   const BusComponent = withBus(MyComponent)
-  const component = render(<BusComponent orig='myProp' name='Stella' />)
+  const component = render(<BusProvider bus={getBus()}><BusComponent orig='myProp' name='Stella' /></BusProvider>)
 
   // Then
   // See more assertion in component
@@ -79,7 +116,7 @@ test('passes the bus prop to a regular component', () => {
   expect(component).toMatchSnapshot()
 })
 
-test('passes the bus prop to a regular component with children', () => {
+test('withBus passes the bus prop to a regular component with children', () => {
   // Given
   const makeSureCalled = jest.fn()
   class MyInnerComponent extends Component {
@@ -97,7 +134,7 @@ test('passes the bus prop to a regular component with children', () => {
   }
   // When
   const BusComponent = withBus(MyComponent)
-  const component = render(<BusComponent orig='myProp' name='Molly' />)
+  const component = render(<BusProvider bus={getBus()}><BusComponent orig='myProp' name='Molly' /></BusProvider>)
 
   // Then
   // See more assertion in component

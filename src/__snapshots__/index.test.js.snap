@@ -1,7 +1,9 @@
-exports[`test passes the bus prop to a functional component 1`] = `"<div>Yo</div>"`;
+exports[`test BusProvider passes the bus in context 1`] = `"<div>Yo</div>"`;
 
-exports[`test passes the bus prop to a functional component with children 1`] = `"<div><span>Hello</span></div>"`;
+exports[`test withBus passes the bus prop to a functional component 1`] = `"<div>Yo</div>"`;
 
-exports[`test passes the bus prop to a regular component 1`] = `"<h1>Hello, Stella</h1>"`;
+exports[`test withBus passes the bus prop to a functional component with children 1`] = `"<div><span>Hello</span></div>"`;
 
-exports[`test passes the bus prop to a regular component with children 1`] = `"<h1><span>Hello, Molly</span></h1>"`;
+exports[`test withBus passes the bus prop to a regular component 1`] = `"<h1>Hello, Stella</h1>"`;
+
+exports[`test withBus passes the bus prop to a regular component with children 1`] = `"<h1><span>Hello, Molly</span></h1>"`;
