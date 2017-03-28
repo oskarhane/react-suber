@@ -2925,9 +2925,9 @@ strip-json-comments@~1.0.1, strip-json-comments@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-1.0.4.tgz#1e15fbcac97d3ee99bf2d73b4c656b082bbafb91"
 
-suber@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/suber/-/suber-4.0.0.tgz#c6236861c686ff97d06db703679a19efdb5a1b43"
+suber@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/suber/-/suber-5.0.0.tgz#d4c08d22a6dab6fa8d43bee32e98a9ebc6cb93e4"
 
 supports-color@^0.2.0:
   version "0.2.0"
