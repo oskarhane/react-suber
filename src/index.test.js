@@ -40,6 +40,29 @@ test('withBus throws BusNotFoundError when bus isnt in context', () => {
   expect(() => render(<BusComponent orig='myProp' />)).toThrow(new BusNotFoundError())
 })
 
+test('withBus passes the bus prop and it can be used', () => {
+  // Given
+  const channel = 'mychannel'
+  const data = {x: 1}
+  const cb = jest.fn()
+  const fnComponent = (props) => {
+    expect(props.bus.take).toBeDefined()
+    props.bus.send(channel, props.data)
+    return null
+  }
+  const bus = createBus()
+
+  // When
+  bus.take(channel, cb)
+  const BusComponent = withBus(fnComponent)
+  render(<BusProvider bus={bus}><BusComponent data={data} /></BusProvider>)
+
+  // Then
+  // See more assertion in component
+  expect(cb).toHaveBeenCalledWith(data)
+  expect(cb).toHaveBeenCalledTimes(1)
+})
+
 test('withBus passes the bus prop to a functional component', () => {
   // Given
   const makeSureCalled = jest.fn()
