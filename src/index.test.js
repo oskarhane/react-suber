@@ -1,160 +1,195 @@
 /* global test, expect, jest */
-import React from 'react'
-import { mount } from 'enzyme'
-import { withBus } from './'
+import React from "react";
+import { render, Simulate } from "react-testing-library";
+import "jest-dom/extend-expect";
 
-test('exposes the withBus wrapper function', () => {
-  const wb = withBus()
-  expect(wb).toBeDefined()
-})
+import { createBus } from "suber";
+import { withBus, BusProvider } from "./";
 
-test('passes the bus prop to a functional component', () => {
+test("exposes the withBus wrapper function", () => {
+  const wb = withBus(() => <div />);
+  expect(wb).toBeDefined();
+});
+
+test("withBus passes the bus prop to a functional component", () => {
   // Given
-  const makeSureCalled = jest.fn()
-  const fnComponent = (props) => {
-    makeSureCalled()
-    expect(props.bus.take).toBeDefined()
-    expect(props.orig).toEqual('myProp')
-    return <div>Yo</div>
-  }
-
+  const bus = createBus();
+  const makeSureCalled = jest.fn();
+  const FnComponent = props => {
+    makeSureCalled();
+    expect(props.bus.take).toBeDefined();
+    expect(props.orig).toEqual("myProp");
+    return <div>Yo</div>;
+  };
   // When
-  const BusComponent = withBus(fnComponent)
-  const component = mount(<BusComponent orig='myProp' />)
+  const MyComp = withBus(FnComponent);
+  const { container } = render(
+    <BusProvider bus={bus}>
+      <MyComp orig="myProp" />
+    </BusProvider>
+  );
 
   // Then
   // See more assertion in component
-  expect(BusComponent).toBeDefined()
-  expect(makeSureCalled).toHaveBeenCalled()
-  expect(component.text()).toEqual('Yo')
-})
+  expect(makeSureCalled).toHaveBeenCalled();
+  expect(container).toMatchSnapshot();
+});
 
-test('passes the bus prop to a functional component with children', () => {
+test("passes the bus prop to a functional component with children", () => {
   // Given
-  const makeSureCalled = jest.fn()
+  const bus = createBus();
+  const makeSureCalled = jest.fn();
 
   const FnChildrenComponent = () => {
-    makeSureCalled()
-    return <span key='1'>Hello</span>
-  }
+    makeSureCalled();
+    return <span key="1">Hello</span>;
+  };
 
-  const fnComponent = (props) => {
-    makeSureCalled()
-    expect(props.bus.take).toBeDefined()
-    expect(props.orig).toEqual('myProp')
-    return <div>{props.children}</div>
-  }
+  const fnComponent = props => {
+    makeSureCalled();
+    expect(props.bus.take).toBeDefined();
+    expect(props.orig).toEqual("myProp");
+    return <div>{props.children}</div>;
+  };
 
   // When
-  const BusComponent = withBus(fnComponent)
-  const component = mount(<BusComponent orig='myProp'><FnChildrenComponent /></BusComponent>)
+  const BusComponent = withBus(fnComponent);
+  const { container } = render(
+    <BusProvider bus={bus}>
+      <BusComponent orig="myProp">
+        <FnChildrenComponent />
+      </BusComponent>
+    </BusProvider>
+  );
 
   // Then
   // See more assertion in component
-  expect(BusComponent).toBeDefined()
-  expect(makeSureCalled).toHaveBeenCalledTimes(2)
-  expect(component.text()).toEqual('Hello')
-})
+  expect(BusComponent).toBeDefined();
+  expect(makeSureCalled).toHaveBeenCalledTimes(2);
+  expect(container).toMatchSnapshot();
+});
 
-test('passes the bus prop to a regular component', () => {
+test("withBus passes the bus prop to a regular component", () => {
   // Given
-  const makeSureCalled = jest.fn()
+  const bus = createBus();
+  const makeSureCalled = jest.fn();
   class MyComponent extends React.Component {
-    render () {
-      makeSureCalled()
-      expect(this.props.bus.take).toBeDefined()
-      expect(this.props.orig).toEqual('myProp')
-      return <h1>Hello, {this.props.name}</h1>
+    render() {
+      makeSureCalled();
+      expect(this.props.bus.take).toBeDefined();
+      expect(this.props.orig).toEqual("myProp");
+      return <h1>Hello, {this.props.name}</h1>;
     }
   }
   // When
-  const BusComponent = withBus(MyComponent)
-  const component = mount(<BusComponent orig='myProp' name='Stella' />)
+  const BusComponent = withBus(MyComponent);
+  const { container } = render(
+    <BusProvider bus={bus}>
+      <BusComponent orig="myProp" name="Stella" />
+    </BusProvider>
+  );
 
   // Then
   // See more assertion in component
-  expect(BusComponent).toBeDefined()
-  expect(makeSureCalled).toHaveBeenCalled()
-  expect(component.text()).toEqual('Hello, Stella')
-})
+  expect(BusComponent).toBeDefined();
+  expect(makeSureCalled).toHaveBeenCalled();
+  expect(container).toMatchSnapshot();
+});
 
-test('passes the bus prop to a regular component with children', () => {
+test("withBus passes the bus prop to a regular component with children", () => {
   // Given
-  const makeSureCalled = jest.fn()
+  const bus = createBus();
+  const makeSureCalled = jest.fn();
   class MyInnerComponent extends React.Component {
-    render () {
-      makeSureCalled()
-      return <span>Hello, {this.props.children}</span>
+    render() {
+      makeSureCalled();
+      return <span>Hello, {this.props.children}</span>;
     }
   }
   class MyComponent extends React.Component {
-    render () {
-      expect(this.props.bus.take).toBeDefined()
-      expect(this.props.orig).toEqual('myProp')
-      return <h1><MyInnerComponent>{this.props.name}</MyInnerComponent></h1>
+    render() {
+      expect(this.props.bus.take).toBeDefined();
+      expect(this.props.orig).toEqual("myProp");
+      return (
+        <h1>
+          <MyInnerComponent>{this.props.name}</MyInnerComponent>
+        </h1>
+      );
     }
   }
   // When
-  const BusComponent = withBus(MyComponent)
-  const component = mount(<BusComponent orig='myProp' name='Molly' />)
+  const BusComponent = withBus(MyComponent);
+  const { container } = render(
+    <BusProvider bus={bus}>
+      <BusComponent orig="myProp" name="Molly" />
+    </BusProvider>
+  );
 
   // Then
   // See more assertion in component
-  expect(BusComponent).toBeDefined()
-  expect(makeSureCalled).toHaveBeenCalled()
-  expect(component.text()).toEqual('Hello, Molly')
-})
+  expect(BusComponent).toBeDefined();
+  expect(makeSureCalled).toHaveBeenCalled();
+  expect(container).toMatchSnapshot();
+});
 
-test('communication works', () => {
+test("communication works", () => {
   // Given
+  const bus = createBus();
   class WarningBanner extends React.Component {
-    constructor () {
-      super()
+    constructor() {
+      super();
       this.state = {
         warning: null
-      }
+      };
     }
-    componentDidMount () {
+    componentDidMount() {
       // Start listening for events on component mount
       // When something arrives, set component state to the warning message
-      this.stop = this.props.bus.take('SHOW_WARNING', (msg) => {
-        this.setState({ warning: msg.warning })
-      })
+      this.stop = this.props.bus.take("SHOW_WARNING", msg => {
+        this.setState({ warning: msg.warning });
+      });
     }
-    componentWillUnmount () {
+    componentWillUnmount() {
       // Stop listening on unmount
-      this.stop()
+      this.stop();
     }
-    render () {
+    render() {
       // Show the warning (if present)
-      if (!this.state.warning) return <div className='no-warning' />
-      return <blink>{ this.state.warning }</blink>
+      if (!this.state.warning)
+        return <div data-testid="no-warning" className="no-warning" />;
+      return <blink data-testid="warning">{this.state.warning}</blink>;
     }
   }
   const SenderButton = ({ bus, children }) => {
-    const onClick = () => bus.send('SHOW_WARNING', { warning: 'Hacking detected!' })
-    return <button onClick={onClick}>{ children }</button>
-  }
+    const onClick = () =>
+      bus.send("SHOW_WARNING", { warning: "Hacking detected!" });
+    return (
+      <button data-testid="click-btn" onClick={onClick}>
+        {children}
+      </button>
+    );
+  };
 
   // When
-  const WarningBannerWithBus = withBus(WarningBanner)
-  const SenderButtonWithBus = withBus(SenderButton)
-  const wrapper = mount(
-    <div>
+  const WarningBannerWithBus = withBus(WarningBanner);
+  const SenderButtonWithBus = withBus(SenderButton);
+  const { container, getByText, queryByTestId } = render(
+    <BusProvider bus={bus}>
       <WarningBannerWithBus />
       <SenderButtonWithBus>Click</SenderButtonWithBus>
-    </div>
-  )
+    </BusProvider>
+  );
 
   // Then
-  expect(wrapper.find('.no-warning').length).toBe(1)
-  expect(wrapper.find('blink').length).toBe(0)
+  expect(queryByTestId("no-warning")).not.toBeNull();
+  expect(queryByTestId("warning")).toBeNull();
+  expect(container).toMatchSnapshot();
 
   // When
-  wrapper.find('button').simulate('click')
+  Simulate.click(getByText("Click"));
 
   // Then
-  expect(wrapper.find('.no-warning').length).toBe(0)
-  expect(wrapper.find('blink').length).toBe(1)
-  expect(wrapper.find('blink').text()).toBe('Hacking detected!')
-})
+  expect(queryByTestId("no-warning")).toBeNull();
+  expect(queryByTestId("warning")).not.toBeNull();
+  expect(container).toMatchSnapshot();
+});

@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`communication works 1`] = `
+<div>
+  <div
+    class="no-warning"
+    data-testid="no-warning"
+  />
+  <button
+    data-testid="click-btn"
+  >
+    Click
+  </button>
+</div>
+`;
+
+exports[`communication works 2`] = `
+<div>
+  <blink
+    data-testid="warning"
+  >
+    Hacking detected!
+  </blink>
+  <button
+    data-testid="click-btn"
+  >
+    Click
+  </button>
+</div>
+`;
+
+exports[`passes the bus prop to a functional component with children 1`] = `
+<div>
+  <div>
+    <span>
+      Hello
+    </span>
+  </div>
+</div>
+`;
+
+exports[`withBus passes the bus prop to a functional component 1`] = `
+<div>
+  <div>
+    Yo
+  </div>
+</div>
+`;
+
+exports[`withBus passes the bus prop to a regular component 1`] = `
+<div>
+  <h1>
+    Hello, 
+    Stella
+  </h1>
+</div>
+`;
+
+exports[`withBus passes the bus prop to a regular component with children 1`] = `
+<div>
+  <h1>
+    <span>
+      Hello, 
+      Molly
+    </span>
+  </h1>
+</div>
+`;
