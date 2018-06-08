@@ -1,6 +1,6 @@
 {
   "name": "react-suber",
-  "version": "0.1.0",
+  "version": "1.0.4",
   "description": "Binding function 'withBus' between React and Suber",
   "main": "lib/index.js",
   "scripts": {
